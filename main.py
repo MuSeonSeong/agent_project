@@ -1,4 +1,4 @@
-from agents.agent import agent  # 이게 AgentExecutor라고 가정
+from agents.basic_agent import agent
 
 if __name__ == "__main__":
     while True:
@@ -7,12 +7,12 @@ if __name__ == "__main__":
             break
 
         # streaming
-        for event in agent.stream({"input": user_input}):
-            # tool 호출
-            if "actions" in event:
-                for action in event["actions"]:
-                    print(f"[tool] {action.tool}({action.tool_input})")
-
-            # 최종 답변
-            if "outputs" in event:
-                print("답변:", event["outputs"]["output"])
+        for chunk in agent.stream(  
+            {"messages": [{"role": "user", "content": user_input}]},
+            stream_mode="values",
+        ):
+            latest_message = chunk["messages"][-1]
+            if latest_message.content:
+                print(f"Agent: {latest_message.content}")
+            elif latest_message.tool_calls:
+                print(f"Calling tools: {[tc['name'] for tc in latest_message.tool_calls]}")
