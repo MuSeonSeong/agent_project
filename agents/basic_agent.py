@@ -6,7 +6,7 @@ from langchain.agents import create_agent
 from langchain_core.prompts import ChatPromptTemplate
 from tools.basic_tool import echo_tool
 
-llm = ChatOpenAI(model="gpt-5-nano") 
+llm = ChatOpenAI(model="gpt-4.1-mini") 
 
 tools = [echo_tool]
 
